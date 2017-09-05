@@ -30,9 +30,14 @@ if($appid!='' && $appkey != '')
 	$management_base_url = $openapi['hsda-management']['schemes'][0] . '://' . $openapi['hsda-management']['host'] . $openapi['hsda-management']['basePath'];
 	$management_base_url = $management_base_url . 'users/auth/?login=' . $admin_login . '&code=' . $admin_code;	
 	//echo "management url: " . $management_base_url . "<br />";
+	
+	// Send Auth Headers
+	$headers = array('x-appid: ' . $admin_login,'x-appkey: ' . $admin_code);
+	
 	$http = curl_init();  
 	curl_setopt($http, CURLOPT_URL, $management_base_url);  
 	curl_setopt($http, CURLOPT_RETURNTRANSFER, 1);   
+	curl_setopt($http, CURLOPT_HTTPHEADER, $headers); 
 	
 	$output = curl_exec($http);
 	//echo $output;
@@ -42,6 +47,8 @@ else
 	{
 	$user_access	= array();
 	}
+
+//var_dump($user_access);
 
 // Get the master OpenAPI URL (Considering moving local for performance, for now its fine.)
 $openapi_yaml = $openapi['hsda-default'];
