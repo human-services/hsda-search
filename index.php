@@ -129,19 +129,19 @@ foreach($paths as $path => $path_details)
 	
 	    		if($id_count==2)
 	    			{
-		    		$app->get($route2, function ($id)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->get($route2, function ($id)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
 	    		elseif($id_count==3)
 	    			{
-		    		$app->get($route2, function ($id,$id2)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->get($route2, function ($id,$id2)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
 	    		else
 	    			{
-		    		$app->get($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->get($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
@@ -153,19 +153,19 @@ foreach($paths as $path => $path_details)
 	
 	    		if($id_count==2)
 	    			{
-		    		$app->post($route2, function ($id)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->post($route2, function ($id)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
 	    		elseif($id_count==3)
 	    			{
-		    		$app->post($route2, function ($id,$id2)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->post($route2, function ($id,$id2)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
 	    		else
 	    			{
-		    		$app->post($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->post($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
@@ -178,19 +178,19 @@ foreach($paths as $path => $path_details)
 	
 	    		if($id_count==2)
 	    			{
-		    		$app->put($route2, function ($id)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->put($route2, function ($id)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
 	    		elseif($id_count==3)
 	    			{
-		    		$app->put($route2, function ($id,$id2)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->put($route2, function ($id,$id2)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
 	    		else
 	    			{
-		    		$app->put($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->put($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
@@ -203,19 +203,19 @@ foreach($paths as $path => $path_details)
 	
 	    		if($id_count==2)
 	    			{
-		    		$app->delete($route2, function ($id)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->delete($route2, function ($id)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
 	    		elseif($id_count==3)
 	    			{
-		    		$app->delete($route2, function ($id,$id2)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->delete($route2, function ($id,$id2)  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
 	    		else
 	    			{
-		    		$app->delete($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath){
+		    		$app->delete($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code){
 		      			include "includes/" . $verb . ".php";
 		      			});
 	    			}
@@ -228,7 +228,7 @@ foreach($paths as $path => $path_details)
 			$default['message'] = "Sorry, you do not have access to that path!";
 	    	if($verb == 'get')
 	    		{				
-	    		$app->get($route2, function ()  use ($app,$conn,$route,$verb,$default){
+	    		$app->get($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code,$default){
 	      			//$app->response()->header("Content-Type", "application/json");
 	      			$app->status(403);
 					$app->response()->header("Content-Type", "application/json");
@@ -238,7 +238,7 @@ foreach($paths as $path => $path_details)
 	    	if($verb == 'post')
 	    		{	
 	    		//echo $route2;
-	    		$app->post($route2, function ()  use ($app,$conn,$route,$verb,$default){
+	    		$app->post($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code,$default){
 	      			//$app->response()->header("Content-Type", "application/json");
 	      			$app->status(403);
 					$app->response()->header("Content-Type", "application/json");
@@ -247,7 +247,7 @@ foreach($paths as $path => $path_details)
 	    		}
 	    	if($verb == 'put')
 	    		{				
-	    		$app->put($route2, function ()  use ($app,$conn,$route,$verb,$default){
+	    		$app->put($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code,$default){
 	      			//$app->response()->header("Content-Type", "application/json");
 	      			$app->status(403);
 					$app->response()->header("Content-Type", "application/json");
@@ -256,7 +256,7 @@ foreach($paths as $path => $path_details)
 	    		}	    		
 	    	if($verb == 'delete')
 	    		{				
-	    		$app->delete($route2, function ()  use ($app,$conn,$route,$verb,$default){
+	    		$app->delete($route2, function ()  use ($app,$conn,$route,$verb,$openapi,$head,$prepath,$postpath,$appid,$admin_login,$admin_code,$default){
 	      			//$app->response()->header("Content-Type", "application/json");
 	      			$app->status(403);
 					$app->response()->header("Content-Type", "application/json");
