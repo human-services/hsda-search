@@ -1,61 +1,44 @@
 <?php
-$request = $app->request();
-$_get = $request->params();
-$head = $request->headers();
+$override = 1;
 
-$Pagination_Query = array();
-
-$override = 0;
-
-// grab this path
-$api = $openapi['hsda-default']['paths'][$route];
-
-// grab this path
-$definitions = $openapi['hsda-default']['definitions'];
-
-// load up the parameters (type,name,description,default)
-if(isset($api[$verb]['parameters']))
+function getRoute($openapi,$route,$verb,$conn)
 	{
-	$parameters = $api[$verb]['parameters'];
-	}
-else
-	{
-	$parameters = array();	
-	}
-
-// load of up the responses
-if(isset($api[$verb]['responses']))
-	{
-	$responses = $api[$verb]['responses'];
-	}
-else
-	{
-	$responses = array();
-	}
+		
+	$This_Object = array();
 	
-$response_200 = $responses['200'];
-
-// grab our schema
-$schema_ref = $response_200['schema']['items']['$ref'];
-$schema = str_replace("#/definitions/","",$schema_ref);
-$schema_properties = $definitions[$schema]['properties'];
-$schema = str_replace("_complete","",$schema);
-
-$ReturnObject = array();
-
-// Load any pre extensions for this route
-//echo "pre:" . $prepath . "<br />";
-if(file_exists($prepath)) 
-	{
-	include $prepath;
-	}
+	// grab this path
+	$api = $openapi['hsda']['paths'][$route];
 	
-// Meta
-include "meta/pre.php";	
-
-// override primary query
-if($override==0)
-	{
+	// grab this path
+	$definitions = $openapi['hsda']['definitions'];
+	
+	// load up the parameters (type,name,description,default)
+	if(isset($api[$verb]['parameters']))
+		{
+		$parameters = $api[$verb]['parameters'];
+		}
+	else
+		{
+		$parameters = array();	
+		}
+	
+	// load of up the responses
+	if(isset($api[$verb]['responses']))
+		{
+		$responses = $api[$verb]['responses'];
+		}
+	else
+		{
+		$responses = array();
+		}
+		
+	$response_200 = $responses['200'];
+	
+	// grab our schema
+	$schema_ref = $response_200['schema']['items']['$ref'];
+	$schema = str_replace("#/definitions/","",$schema_ref);
+	$schema_properties = $definitions[$schema]['properties'];
+	$schema = str_replace("_complete","",$schema);
 	
 	$Query = "SELECT ";
 	
@@ -195,8 +178,6 @@ if($override==0)
 		{
 		$Query .= " LIMIT " . $paging;
 		}
-		
-	//echo $Query;
 	
 	$results = $conn->query($Query);
 	if(count($results) > 0)
@@ -266,100 +247,23 @@ if($override==0)
 					
 					}			
 				}
-			array_push($ReturnObject, $F);
+			array_push($This_Object, $F);
 			}
 		}
-	} // End override
-	
-	
-// Set pagination w/ header
-$pagination = "";
-if(count($Pagination_Query) > 0)
-	{
-	$pagination_results = $conn->query($Pagination_Query);	
-	$total = count($pagination_results);
-	
-	if($total <= $per_page)
-		{
-		$total_pages = 1;
-		$first_page = true;
-		$last_page = true;
-		$previous_page = null;
-		$next_page = null;
-		}
-	else
-		{
-		$total_pages = $total / $pagination_results;
-		if($page > 1)
-			{
-			$first_page = true;
-			$previous_page = null;
-			}
-		else
-			{
-			$first_page = false;
-			$previous_page = $page - 1;
-			}
-			
-		if($page == $total_pages)
-			{
-			$last_page = true;
-			$next_page = null;
-			}
-		else
-			{
-			$last_page = false;
-			$next_page = $page + 1;
-			}		
-		}
-	
-	$p = array();
-	$p['total'] = $total;
-	$p['total_pages'] = $total_pages;
-	$p['first_page'] = $first_page;
-	$p['last_page'] = $last_page;
-	$p['previous_page'] = $previous_page;
-	$p['next_page'] = $next_page;
-	$pagination = json_encode($p);
+		
+		return $This_Object;	
 	}
 
-// Load any post extensions for this path	
-if (file_exists($postpath)) 
-	{
-	include $postpath;
-	}
-	
-// Meta
-include "meta/post.php";	
+$ReturnObject = array();
 
-//echo $head['ACCEPT'] . "<br />";
-if(isset($head['ACCEPT']) && $head['ACCEPT'] == 'text/csv')
-	{
-	if($pagination!='')
-		{
-		$app->response()->header("X-Pagination", $pagination);	
-		}
-	$app->response()->header("Content-Type", "text/csv");	
-	$return_csv = generateCsv($ReturnObject);
-	echo $return_csv;
-	}
-elseif(isset($head['ACCEPT']) && $head['ACCEPT'] == 'application/xml')
-	{
-	if($pagination!='')
-		{
-		$app->response()->header("X-Pagination", $pagination);	
-		}	
-	$app->response()->header("Content-Type", "application/xml");	
-	$return_xml = arrayToXml($ReturnObject);
-	echo $return_xml;
-	}
-else
-	{
-	if($pagination!='')
-		{
-		$app->response()->header("X-Pagination", $pagination);	
-		}
-	$app->response()->header("Content-Type", "application/json");
-	echo stripslashes(format_json(json_encode($ReturnObject)));
-	}
+$route = '/organizations/complete/';
+$ReturnObject['organizations'] = getRoute($openapi,$route,$verb,$conn);
+
+$route = '/locations/complete/';
+$ReturnObject['locations'] = getRoute($openapi,$route,$verb,$conn);
+
+$route = '/services/complete/';
+$ReturnObject['services'] = getRoute($openapi,$route,$verb,$conn);
+
+$Pagination_Query = array();
 ?>
