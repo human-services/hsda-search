@@ -1,7 +1,7 @@
 <?php
 $override = 1;
 
-function getRoute($openapi,$route,$verb,$conn)
+function getRoute($openapi,$route,$verb,$conn,$_get)
 	{
 		
 	$This_Object = array();
@@ -38,7 +38,7 @@ function getRoute($openapi,$route,$verb,$conn)
 	$schema_ref = $response_200['schema']['items']['$ref'];
 	$schema = str_replace("#/definitions/","",$schema_ref);
 	$schema_properties = $definitions[$schema]['properties'];
-	$schema = str_replace("_complete","",$schema);
+	$schema = str_replace("_full","",$schema);
 	
 	$Query = "SELECT ";
 	
@@ -73,7 +73,7 @@ function getRoute($openapi,$route,$verb,$conn)
 		//echo $parameter['name'] . "<br />";
 	
 		// Multiple queries
-		if($parameter['name']=='queries')
+		if($parameter['name']=='query')
 			{
 			// default	
 			if(isset($_get['query']))
@@ -137,7 +137,7 @@ function getRoute($openapi,$route,$verb,$conn)
 		$Query .= " WHERE" . $where;
 		}
 		
-	if(isset($id) && $id !='complete')
+	if(isset($id) && $id !='full')
 		{
 		$path_count_array = explode("/",$route);	
 		///var_dump($path_count_array);
@@ -147,7 +147,7 @@ function getRoute($openapi,$route,$verb,$conn)
 		//echo "path: " . $core_path . "<br />";
 		//echo "path count: " . $path_count . "<br />";
 		
-		if(isset($id2) && $id2 !='complete')
+		if(isset($id2) && $id2 !='full')
 			{
 			if($path_count == 6)
 				{
@@ -156,7 +156,7 @@ function getRoute($openapi,$route,$verb,$conn)
 			}
 		else
 			{
-			if($path_count == 5 && $path_count_array[2] !='complete')
+			if($path_count == 5 && $path_count_array[2] !='full')
 				{
 				$Query .= " WHERE " . $core_path . "_id = '" . $id . "'";	
 				}
@@ -178,6 +178,8 @@ function getRoute($openapi,$route,$verb,$conn)
 		{
 		$Query .= " LIMIT " . $paging;
 		}
+	
+	//echo $Query;
 	
 	$results = $conn->query($Query);
 	if(count($results) > 0)
@@ -256,14 +258,14 @@ function getRoute($openapi,$route,$verb,$conn)
 
 $ReturnObject = array();
 
-$route = '/organizations/complete/';
-$ReturnObject['organizations'] = getRoute($openapi,$route,$verb,$conn);
+$route = '/organizations/full/';
+$ReturnObject['organizations'] = getRoute($openapi,$route,$verb,$conn,$_get);
 
-$route = '/locations/complete/';
-$ReturnObject['locations'] = getRoute($openapi,$route,$verb,$conn);
+$route = '/locations/full/';
+$ReturnObject['locations'] = getRoute($openapi,$route,$verb,$conn,$_get);
 
-$route = '/services/complete/';
-$ReturnObject['services'] = getRoute($openapi,$route,$verb,$conn);
+$route = '/services/full/';
+$ReturnObject['services'] = getRoute($openapi,$route,$verb,$conn,$_get);
 
 $Pagination_Query = array();
 ?>
